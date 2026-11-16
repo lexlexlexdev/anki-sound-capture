@@ -1,0 +1,19 @@
+name: Build and test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build app and bundled FFmpeg
+        run: ./build.sh
+        env:
+          CODE_SIGN_IDENTITY: "-"
+      - name: Test Swift
+        run: swift test
+      - name: Test Anki companion
+        run: python3 -m unittest discover -s Tests/AnkiSyncTests -v
